@@ -11,7 +11,7 @@ git clone https://github.com/Anorak01/SSHTui
 cd SSHTui
 go install
 ```
-If you dont use `kitty` terminal, go into the config file and change the terminal to what you want
+If you don't use `kitty` terminal, go into the config file and change the terminal to what you want
 
 ## Usage
 Open the application with:
