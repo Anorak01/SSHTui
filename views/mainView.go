@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 type sshEntry struct {
@@ -125,11 +126,15 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				sshArgs = append(sshArgs, "-i", selectedEntry.Key)
 			}
 
-			err := exec.Command(m.data.TerminalName, sshArgs...).Run()
+			cmd := exec.Command(m.data.TerminalName, sshArgs...)
+			cmd.SysProcAttr = &syscall.SysProcAttr{
+				Setpgid: true,
+				Pgid:    0,
+			}
+			err := cmd.Start()
 			if err != nil {
-				// print error
-				fmt.Printf("Error running command: %v\n", err)
-
+				fmt.Printf("Error starting SSH command: %v\n", err)
+				return m, nil
 			}
 
 		case "n": // open new connection view
